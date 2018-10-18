@@ -9,6 +9,8 @@ var wallet = Wallet.generate();
 
 var signerPrivKey = wallet.getPrivateKeyString();
 var signerAddress = wallet.getAddressString();
+console.log(signerAddress)
+
 writeFileSync('../signer_priv_key', signerPrivKey)
 
 module.exports = async function (deployer) {
@@ -17,7 +19,7 @@ module.exports = async function (deployer) {
     await deployer.deploy(KeyHolder).then(async () => {
       var issuerInstance = await KeyHolder.deployed()
       var signerKey = Web3Utils.soliditySha3(signerAddress)
-      issuerInstance.addKey(signerKey, 3, 1)
+      await issuerInstance.addKey(signerKey, 3, 1)
       writeFileSync('issuer_address', issuerInstance.address)
     });
 

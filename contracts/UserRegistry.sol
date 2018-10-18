@@ -7,10 +7,18 @@ contract UserRegistry {
     event NewUser(address _address, address _identity);
     mapping(address => address) public users;
 
-    function identity() public {
-        address _identity = new ClaimHolder();
-        users[msg.sender] = _identity;
-        emit NewUser(msg.sender, _identity);
+    function registerUser()
+        public
+    {
+        users[tx.origin] = msg.sender;
+        emit NewUser(tx.origin, msg.sender);
+    }
+
+    /// @dev clearUser(): Remove user from the registry
+    function clearUser()
+        public
+    {
+        users[msg.sender] = 0;
     }
 
 }

@@ -1,48 +1,53 @@
 var {readFileSync} = require('fs')
 
 var UserRegistry = artifacts.require('UserRegistry')
+var Identity = artifacts.require('Identity')
+
+var ClaimHolder = artifacts.require('ClaimHolder')
 var KeyHolder = artifacts.require('KeyHolder')
 var ClaimVerifier = artifacts.require('ClaimVerifier')
 
 var Web3Utils = require('web3-utils');
 
-var Wallet = require('ethereumjs-wallet');
-var wallet = Wallet.generate();
+var signerPrivKeyString = readFileSync('signer_priv_key', 'utf-8')
 
-var signerPrivKey = wallet.getPrivateKeyString();
-var signerAddress = wallet.getAddressString();
+var Web3 = require('web3');
+const web3_v1 = new Web3(web3.currentProvider);
 
-var signerKey = Web3Utils.soliditySha3(signerAddress)
-
-
-contract('Issuer', async function(accounts) {
-
-  it('Deploy issuer', async function() {
-    var keyHolder = await KeyHolder.deployed();
-    await keyHolder.addKey(signerKey, 3, 1,{from: accounts[0]});
-    var key = await keyHolder.getKey(signerKey);
-
-    assert.equal(key[0], 3);
-    assert.equal(key[1], 1);
-    assert.equal(key[2], signerKey);
-
-  })
-
-})
-
-contract('UserRegistry', async function(accounts) {
+contract('Integration', async function(accounts) {
   
-  var userRegistry = await UserRegistry.deployed();
-
   it('Deploy identity', async function() {
-    await userRegistry.identity({from: accounts[0]});
-    user = await userRegistry.users(accounts[0]);
-    assert.notEqual(user, 0x0000000000000000000000000000000000000000);
+    var userRegistry = await UserRegistry.deployed()
+    await Identity.new(userRegistry.address);
   })
+  
+  it('Add key to identity', async function() {
+    var claimVerifier = await ClaimVerifier.deployed();
+    var userRegistry = await UserRegistry.deployed();
+    var user = await userRegistry.users(accounts[0]);
 
-  it('Add claim', async function() {
-    user = await userRegistry.users(accounts[0]);
-    console.log(user);    
+    var claimHolder = await ClaimHolder.at(user);
+
+    var issuer = await KeyHolder.deployed();
+    var claimType = 0;
+
+    var rawData = "Verified OK";
+    var hexData = Web3Utils.asciiToHex(rawData)  
+
+    var data = Web3Utils.soliditySha3(user,claimType,hexData)
+    var sig = web3_v1.eth.accounts.sign(data, signerPrivKeyString).signature;
+
+    await claimHolder.addClaim(
+      claimType,
+      0,
+      issuer.address,
+      sig,
+      hexData,
+      ""
+    )
+
+    result = await claimVerifier.claimIsValid(user, claimType);
+    assert.equal(result, true);
     
   })
 

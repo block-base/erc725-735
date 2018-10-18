@@ -4,6 +4,8 @@
     "deploy": "rm -rf build; truffle migrate --reset --network rinkeby"
   },
   "dependencies": {
+    "eth-sig-util": "^2.1.0",
+    "ethereumjs-util": "^6.0.0",
     "ethereumjs-wallet": "^0.6.2",
     "fs": "0.0.1-security",
     "truffle-hdwallet-provider": "^0.0.6",
