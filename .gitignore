@@ -1,0 +1,7 @@
+build
+node_modules
+.DS_Store
+registory_address
+issuer_address
+signer_priv_key
+verifier_address
