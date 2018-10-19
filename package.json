@@ -1,7 +1,7 @@
 {
   "scripts": {
     "compile": "truffle compile",
-    "deploy": "rm -rf build; truffle migrate --reset --network rinkeby"
+    "local": "rm -r public/build; truffle migrate --reset; mv build public; node index.js"
   },
   "dependencies": {
     "eth-sig-util": "^2.1.0",
