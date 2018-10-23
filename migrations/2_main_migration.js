@@ -9,6 +9,7 @@ var wallet = Wallet.generate();
 
 var signerPrivKey = wallet.getPrivateKeyString();
 var signerAddress = wallet.getAddressString();
+
 console.log(signerAddress)
 
 writeFileSync('../signer_priv_key', signerPrivKey)
