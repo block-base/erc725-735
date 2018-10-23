@@ -72,30 +72,33 @@
 
         async function startApp() {
             var version = await web3js.version.network;
+            if(version !=4){
+                alert("This is only working on Rinkeby now!")
+            }
 
-            await $.getJSON('../build/contracts/Identity.json').then(function (data) {
+            await $.getJSON('../contracts/Identity.json').then(function (data) {
                 identityABI = data.abi;
                 identityBytesCode = data.bytecode;
             });
 
             identity = web3js.eth.contract(identityABI);
 
-            await $.getJSON('../build/contracts/UserRegistry.json').then(function (data) {
+            await $.getJSON('../contracts/UserRegistry.json').then(function (data) {
                 userRegistoryABI = data.abi;
-                userRegistoryAddress = data.networks[version].address;
+                userRegistoryAddress = "0xf0483797d5f808d4a83d6139d98877e24bae2ed1";
             });
 
-            await $.getJSON('../build/contracts/KeyHolder.json').then(function (data) {
+            await $.getJSON('../contracts/KeyHolder.json').then(function (data) {
                 issuerAddress = data.networks[version].address;
-                document.getElementById("issuer").innerHTML = issuerAddress;
+                document.getElementById("issuer").innerHTML = "0xc052bb58118a2b0c88f0ab55e2440c8292d25e4b";
             });
 
             userRegistory = web3js.eth.contract(userRegistoryABI);
             userRegistoryInstance = userRegistory.at(userRegistoryAddress);
 
-            await $.getJSON('../build/contracts/ClaimVerifier.json').then(function (data) {
+            await $.getJSON('../contracts/ClaimVerifier.json').then(function (data) {
                 claimVerifierABI = data.abi;
-                claimVerifierAddress = data.networks[version].address;
+                claimVerifierAddress = "0x3f978d9200ae3bbd3c7870eb3b85b253f59f1138";
             });
 
             claimVerifier = web3js.eth.contract(claimVerifierABI);

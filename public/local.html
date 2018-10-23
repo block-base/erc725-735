@@ -73,19 +73,19 @@
         async function startApp() {
             var version = await web3js.version.network;
 
-            await $.getJSON('../build/contracts/Identity.json').then(function (data) {
+            await $.getJSON('../contracts/Identity.json').then(function (data) {
                 identityABI = data.abi;
                 identityBytesCode = data.bytecode;
             });
 
             identity = web3js.eth.contract(identityABI);
 
-            await $.getJSON('../build/contracts/UserRegistry.json').then(function (data) {
+            await $.getJSON('../contracts/UserRegistry.json').then(function (data) {
                 userRegistoryABI = data.abi;
                 userRegistoryAddress = data.networks[version].address;
             });
 
-            await $.getJSON('../build/contracts/KeyHolder.json').then(function (data) {
+            await $.getJSON('../contracts/KeyHolder.json').then(function (data) {
                 issuerAddress = data.networks[version].address;
                 document.getElementById("issuer").innerHTML = issuerAddress;
             });
@@ -93,7 +93,7 @@
             userRegistory = web3js.eth.contract(userRegistoryABI);
             userRegistoryInstance = userRegistory.at(userRegistoryAddress);
 
-            await $.getJSON('../build/contracts/ClaimVerifier.json').then(function (data) {
+            await $.getJSON('../contracts/ClaimVerifier.json').then(function (data) {
                 claimVerifierABI = data.abi;
                 claimVerifierAddress = data.networks[version].address;
             });

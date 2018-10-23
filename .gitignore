@@ -6,3 +6,7 @@ issuer_address
 signer_priv_key
 verifier_address
 config.json
+ClaimHolder.json
+ERC725.json
+ERC735.json
+Migrations.json

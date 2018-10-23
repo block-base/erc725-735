@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "build": "truffle compile; cp -R build public;",
-    "local": "rm -r public/build; truffle migrate --reset; cp -R build public; node local.js",
+    "build": "truffle compile; cp -R build/contracts public;",
+    "local": "rm -r public/build; truffle migrate --reset; cp -R build/contracts public; node local.js",
     "start": "node rinkeby.js"
   },
   "dependencies": {
