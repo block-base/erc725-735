@@ -4,10 +4,12 @@ var signerPrivKeyString = readFileSync('signer_priv_key', 'utf-8')
 var Web3 = require('web3');
 var web3 = new Web3("https://mainnet.infura.io");
 
-var url = require('url');
-
 var express = require('express');
 var app = express();
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(express.static('public'));
 
@@ -20,25 +22,35 @@ app.use(function(req, res, next) {
   }
 });
 
-app.get('/add', function (req, res) {
+app.post('/add', function (req, res) {
 
-  var urlParts = url.parse(req.url, true);
-  var parameters = urlParts.query;
-  var identity = parameters.identity;
-  var claimType = parameters.claimType;
+  var identity = req.body.identity;
+  var claimType = req.body.claimType;
+  var id = req.body.id;
+  var pass = req.body.pass;
 
-  var rawData = "Verified OK";
-  var hexData = web3.utils.asciiToHex(rawData)  
-  var hash = web3.utils.soliditySha3(identity ,claimType,hexData)
+  //add varify logic 
 
-  var sig = web3.eth.accounts.sign(hash, signerPrivKeyString).signature;
+  //change below condition to check returned value
+  if(1==1){
+    var rawData = req.body.id;
+    var hexData = web3.utils.asciiToHex(rawData)  
+    var hash = web3.utils.soliditySha3(identity ,claimType,hexData)
+    var sig = web3.eth.accounts.sign(hash, signerPrivKeyString).signature;
 
-  res.json(
-    { 
-      sig: sig,
-      data: hexData,
-      status: true,
-    });  
+    res.json(
+      { 
+        sig: sig,
+        data: hexData,
+        status: true,
+      });  
+
+  } else {
+    res.json(
+      {
+        status: false,
+      });      
+  }
 });
 
 app.listen(3000, function () {

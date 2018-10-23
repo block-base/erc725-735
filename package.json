@@ -4,6 +4,7 @@
     "local": "rm -r public/build; truffle migrate --reset; mv build public; node index.js"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "eth-sig-util": "^2.1.0",
     "ethereumjs-util": "^6.0.0",
     "ethereumjs-wallet": "^0.6.2",

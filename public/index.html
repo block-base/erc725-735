@@ -14,10 +14,7 @@
         <div class="jumbotron">
             <div class="container">
                 <h1>Identity</h1>
-                <br>
                 <button class="btn btn-primary" id="deploy" onclick="deploy();">Create Identity</button>
-                <button class="btn btn-primary" type="button" id="add" disabled onclick="add();">Add Claim</button>
-                <button class="btn btn-primary" type="button" id="verify" disabled onclick="verify();">Verify</button>
             </div>
         </div>
     </div>
@@ -28,7 +25,25 @@
         <p id="identity"></p>
         <p id="claim"></p>
     </div>
+    <div class="container" id="new" style="display:none">
+        <div class="form-group">
+            <label for="usr">Name:</label>
+            <input type="text" class="form-control" id="usr">
+        </div>
+        <div class="form-group">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="button" id="add" disabled onclick="add();">Add Claim</button>
+        </div>
+        <div class="form-group">
+            <label for="pwd">Account:</label><p id="account"></p>
+        </div>
 
+
+        <button class="btn btn-primary" type="button" id="verify" disabled onclick="verify();">Verify</button>
+    </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
@@ -126,9 +141,16 @@
             userRegistoryInstance.users(userAccount, function (err, result) {
 
                 $.ajax({
-                    method: 'GET',
-                    url: location.href + 'add?identity=' + result + '&claimType=' + claimType,
+                    method: 'POST',
+                    url: location.href + 'add',
+                    data: {
+                        "identity": result,
+                        "claimType": 0,
+                        "id": document.getElementById("usr").value,
+                        "pass": document.getElementById("pwd").value,
+                    },
                     dataType: 'json',
+
                     success: function (data, textStatus, jqXHR) {
                         if (data.status) {
                             var identityInstance = identity.at(result);
@@ -158,7 +180,7 @@
             userRegistoryInstance.users(userAccount, function (err, result) {
 
                 claimVerifierInstance.claimIsValid(result, claimType, function (err, result) {
-                    console.log(result);
+                    alert("Verified:" + result);
                 });
 
             });
@@ -171,21 +193,21 @@
                     document.getElementById("deploy").innerHTML = "Replace Identity";
                     document.getElementById("add").disabled = false;
                     document.getElementById("verify").disabled = false;
+                    document.getElementById("new").style.display = "block";
                     var identityInstance = identity.at(result);
                     var events = identityInstance.allEvents();
                     events.watch(function (error, event) {
                         if (!error)
                             if (event.event == "ClaimAdded") {
-                                console.log(event.args.claimId);
                                 identityInstance.getClaim(event.args.claimId, function (err, result) {
-                                    console.log(result);
+                                    web3.toAscii(result[4])
                                 });
-
                             }
                     });
                 }
             });
         }
+
 
     </script>
 </body>
