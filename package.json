@@ -1,8 +1,8 @@
 {
   "scripts": {
     "build": "truffle compile; cp -R build/contracts public;",
-    "local": "rm -r public/build; truffle migrate --reset; cp -R build/contracts public; node local.js",
-    "start": "node rinkeby.js"
+    "local": "rm -r public/build; truffle migrate --reset; cp -R build/contracts public; node server.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",

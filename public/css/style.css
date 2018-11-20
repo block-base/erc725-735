@@ -1,0 +1,26 @@
+.ui.container {
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+
+#market .image {
+    height: 25vh;
+}
+
+#market-detail .image {
+    max-height: 60vh;
+}     
+  
+#sell .column {
+    max-width: 800px;
+}
+
+#sell .image {
+    height:60vh
+}
+
+img {
+    width:100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
